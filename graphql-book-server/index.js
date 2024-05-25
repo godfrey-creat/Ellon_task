@@ -1,16 +1,15 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-import App from './App';
+const express = require('express');
+const { graphqlHTTP } = require('express-graphql');
+const schema = require('./schema');
 
-const client = new ApolloClient({
-	uri: 'http://localhost:4000/graphql',
-	cache: new InMemoryCache()
+const app = express();
+
+app.use('/graphql', graphqlHTTP({
+	schema,
+	graphiql: true
+}));
+
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+	console.log(`Server is running on port ${PORT}`);
 });
-
-ReactDOM.render(
-	<ApolloProvider client={client}>
-		<App />
-	</ApolloProvider>,
-	document.getElementById('root')
-);
